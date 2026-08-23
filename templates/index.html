@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incident Report Generator</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="statusbar">
+  <div class="brand"><span class="dot" aria-hidden="true"></span> Incident Report Generator</div>
+  <div class="stat"><span class="label">UTC</span> <span id="clock" class="clock">—</span></div>
+  <div class="stat"><span class="label">Severity</span> <span id="sb-severity" class="badge badge-medium"><span class="swatch"></span>Medium</span></div>
+  <div class="stat"><span class="label">Classification</span> <span id="sb-tlp" class="badge badge-tlp-amber"><span class="swatch"></span>TLP:AMBER</span></div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>🛡️ Cybersecurity Incident Report Generator</h1>
+    <p>Turn investigation notes into a standardized, integrity-hashed incident report — Markdown or PDF.</p>
+    <div class="hero-actions">
+      <button type="button" class="btn-secondary btn-sm" id="sample-btn">Load sample incident</button>
+      <button type="button" class="btn-ghost btn-sm" id="clear-btn">Clear form</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: FORM -->
+    <div>
+      <form id="report-form" novalidate>
+
+        <div class="panel">
+          <div class="panel-title"><span class="idx">1</span>Incident Details</div>
+          <div class="field-row">
+            <div class="field">
+              <label>Incident ID <button type="button" class="btn-ghost gen-id-inline" id="gen-id-btn">generate</button></label>
+              <input name="incident_id" id="f-incident_id" placeholder="INC-2026-0142" maxlength="64" required pattern="[A-Za-z0-9\-_]+">
+              <div class="hint">Letters, digits, - and _ only</div>
+            </div>
+            <div class="field">
+              <label>Title <span class="counter" id="c-title">0/200</span></label>
+              <input name="title" id="f-title" placeholder="Phishing-driven credential compromise" maxlength="200" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Severity</label>
+              <select name="severity" id="f-severity">
+                <option>Critical</option><option selected>High</option><option>Medium</option>
+                <option>Low</option><option>Informational</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select name="status" id="f-status">
+                <option>Open</option><option selected>Investigating</option><option>Contained</option>
+                <option>Eradicated</option><option>Recovered</option><option>Closed</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Classification (TLP)</label>
+              <select name="classification" id="f-classification">
+                <option>TLP:RED</option><option selected>TLP:AMBER</option><option>TLP:GREEN</option><option>TLP:CLEAR</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Date Reported</label>
+              <input type="date" name="date_reported" id="f-date_reported" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Date Occurred</label>
+              <input type="date" name="date_occurred" id="f-date_occurred" required>
+            </div>
+            <div class="field">
+              <label>Reported By</label>
+              <input name="reported_by" placeholder="SOC Analyst" maxlength="100" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>Report Author</label>
+            <input name="report_author" placeholder="Jane Doe, IR Lead" maxlength="100" required>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title"><span class="idx">2</span>Scope</div>
+          <div class="field">
+            <label>Affected Systems <span class="counter" id="c-sys">0/2000</span></label>
+            <textarea name="affected_systems" id="f-affected_systems" maxlength="2000" placeholder="mail-gw-02, corp-vpn-01, 14 endpoint workstations" required></textarea>
+          </div>
+          <div class="field">
+            <label>Description <span class="counter" id="c-desc">0/5000</span></label>
+            <textarea name="description" id="f-description" class="lg" maxlength="5000" placeholder="Summary of what happened" required></textarea>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title"><span class="idx">3</span>Timeline &amp; Indicators</div>
+          <div class="field">
+            <label>Timeline</label>
+            <textarea name="timeline_raw" id="f-timeline" class="lg" placeholder="2026-08-18 09:14 | Suspicious login flagged by SIEM
+2026-08-18 09:40 | Account disabled, SOC escalated to IR team"></textarea>
+            <div class="hint">One event per line: YYYY-MM-DD HH:MM | description</div>
+          </div>
+          <div class="field">
+            <label>Indicators of Compromise</label>
+            <textarea name="iocs_raw" id="f-iocs" placeholder="185.220.101.44
+malicious-login-portal.example"></textarea>
+            <div class="hint">One IOC per line</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title"><span class="idx">4</span>Response &amp; Analysis</div>
+          <div class="field"><label>Impact Assessment</label><textarea name="impact_assessment"></textarea></div>
+          <div class="field"><label>Containment Actions</label><textarea name="containment_actions"></textarea></div>
+          <div class="field"><label>Eradication Actions</label><textarea name="eradication_actions"></textarea></div>
+          <div class="field"><label>Recovery Actions</label><textarea name="recovery_actions"></textarea></div>
+          <div class="field"><label>Root Cause</label><textarea name="root_cause"></textarea></div>
+          <div class="field"><label>Recommendations</label><textarea name="recommendations"></textarea></div>
+        </div>
+
+        <div class="hero-actions">
+          <button type="submit" class="btn-primary" id="gen-btn">Generate report</button>
+          <button type="button" class="btn-secondary" id="pdf-btn">Download PDF</button>
+        </div>
+      </form>
+
+      <div class="panel mt-16" id="history-panel" hidden>
+        <div class="panel-title">Recent reports (this browser)</div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: LIVE PREVIEW -->
+    <div class="preview-col">
+      <div class="console">
+        <div class="console-head">
+          <div class="title">
+            <span class="console-dots"><span></span><span></span><span></span></span>
+            report_preview.md
+          </div>
+        </div>
+        <div class="console-body" id="console-body">
+          <div class="console-empty">
+            <span class="glyph" aria-hidden="true">◈</span>
+            Fill in the incident details and click <strong>Generate report</strong>.<br>
+            The rendered report and its integrity hash will appear here.
+          </div>
+        </div>
+        <div class="hash-row" id="hash-row" hidden>
+          <span>SHA-256</span>
+          <code id="hash-value"></code>
+          <button type="button" class="btn-ghost btn-sm" id="copy-hash-btn">Copy</button>
+        </div>
+        <div class="console-actions" id="console-actions" hidden>
+          <button type="button" class="btn-secondary btn-sm" id="copy-md-btn">Copy markdown</button>
+          <div class="dl-menu-wrap">
+            <button type="button" class="btn-primary btn-sm dl-trigger" id="dl-trigger" aria-haspopup="true" aria-expanded="false">
+              Download
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="dl-menu" id="dl-menu" role="menu" hidden>
+              <button type="button" class="dl-item" id="dl-pdf" role="menuitem">
+                <span class="dl-icon dl-icon-pdf">PDF</span>
+                <span class="dl-text">
+                  <span class="dl-title">PDF document</span>
+                  <span class="dl-sub">Formatted, ready to share</span>
+                </span>
+              </button>
+              <button type="button" class="dl-item" id="dl-md" role="menuitem">
+                <span class="dl-icon dl-icon-md">MD</span>
+                <span class="dl-text">
+                  <span class="dl-title">Markdown file</span>
+                  <span class="dl-sub">Plain text, version-control friendly</span>
+                </span>
+              </button>
+              <button type="button" class="dl-item" id="dl-print" role="menuitem">
+                <span class="dl-icon dl-icon-print">⎙</span>
+                <span class="dl-text">
+                  <span class="dl-title">Print / Save as PDF</span>
+                  <span class="dl-sub">Uses your browser's print dialog</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

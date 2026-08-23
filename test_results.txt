@@ -1,0 +1,39 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/claude/incident-report-generator
+collecting ... collected 31 items
+
+tests/test_report_generator.py::TestValidation::test_valid_payload_passes PASSED [  3%]
+tests/test_report_generator.py::TestValidation::test_missing_required_field_rejected PASSED [  6%]
+tests/test_report_generator.py::TestValidation::test_invalid_severity_rejected PASSED [  9%]
+tests/test_report_generator.py::TestValidation::test_invalid_status_rejected PASSED [ 12%]
+tests/test_report_generator.py::TestValidation::test_invalid_classification_rejected PASSED [ 16%]
+tests/test_report_generator.py::TestValidation::test_bad_incident_id_charset_rejected PASSED [ 19%]
+tests/test_report_generator.py::TestValidation::test_bad_date_format_rejected PASSED [ 22%]
+tests/test_report_generator.py::TestValidation::test_oversized_field_rejected PASSED [ 25%]
+tests/test_report_generator.py::TestValidation::test_non_dict_payload_rejected PASSED [ 29%]
+tests/test_report_generator.py::TestValidation::test_timeline_must_be_list PASSED [ 32%]
+tests/test_report_generator.py::TestValidation::test_too_many_timeline_events_truncated_with_error PASSED [ 35%]
+tests/test_report_generator.py::TestValidation::test_iocs_must_be_list PASSED [ 38%]
+tests/test_report_generator.py::TestSanitization::test_script_tag_escaped PASSED [ 41%]
+tests/test_report_generator.py::TestSanitization::test_control_characters_stripped PASSED [ 45%]
+tests/test_report_generator.py::TestSanitization::test_full_payload_with_xss_attempt_is_neutralized PASSED [ 48%]
+tests/test_report_generator.py::TestSanitization::test_sql_like_string_in_free_text_is_just_escaped_text PASSED [ 51%]
+tests/test_report_generator.py::TestReportGeneration::test_markdown_contains_key_fields PASSED [ 54%]
+tests/test_report_generator.py::TestReportGeneration::test_pdf_generation_produces_nonempty_bytes PASSED [ 58%]
+tests/test_report_generator.py::TestReportGeneration::test_empty_timeline_and_iocs_handled_gracefully PASSED [ 61%]
+tests/test_report_generator.py::TestIntegrity::test_hash_is_deterministic PASSED [ 64%]
+tests/test_report_generator.py::TestIntegrity::test_hash_changes_when_content_changes PASSED [ 67%]
+tests/test_report_generator.py::TestIntegrity::test_verify_integrity_detects_tampering PASSED [ 70%]
+tests/test_report_generator.py::TestRateLimiter::test_allows_up_to_limit PASSED [ 74%]
+tests/test_report_generator.py::TestRateLimiter::test_blocks_beyond_limit PASSED [ 77%]
+tests/test_report_generator.py::TestRateLimiter::test_different_keys_independent PASSED [ 80%]
+tests/test_report_generator.py::TestApiEndpoints::test_index_loads PASSED [ 83%]
+tests/test_report_generator.py::TestApiEndpoints::test_generate_valid_payload PASSED [ 87%]
+tests/test_report_generator.py::TestApiEndpoints::test_generate_invalid_payload_returns_422 PASSED [ 90%]
+tests/test_report_generator.py::TestApiEndpoints::test_generate_non_json_rejected PASSED [ 93%]
+tests/test_report_generator.py::TestApiEndpoints::test_security_headers_present PASSED [ 96%]
+tests/test_report_generator.py::TestApiEndpoints::test_pdf_endpoint_returns_pdf PASSED [100%]
+
+============================== 31 passed in 0.25s ==============================
